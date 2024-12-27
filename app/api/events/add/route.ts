@@ -1,6 +1,7 @@
 import { query } from "@/lib/db";
+import { NextRequest } from "next/server";
 
-export async function POST(req: any) {
+export async function POST(req: NextRequest) {
   const { id, date, title, description } = await req.json();
 
   try {

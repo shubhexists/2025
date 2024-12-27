@@ -1,6 +1,6 @@
 import { query } from "@/lib/db";
 
-export async function GET(req: any) {
+export async function GET() {
   try {
     const result = await query("SELECT * FROM events ORDER BY date ASC", []);
     return new Response(JSON.stringify(result.rows), { status: 200 });

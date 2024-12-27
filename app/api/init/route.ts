@@ -1,6 +1,6 @@
 import { query } from "@/lib/db";
 
-export async function POST(req: any) {
+export async function POST() {
   const createTableQuery = `
     CREATE TABLE IF NOT EXISTS events (
       id UUID PRIMARY KEY,

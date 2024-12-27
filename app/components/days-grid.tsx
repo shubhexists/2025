@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
@@ -94,7 +95,7 @@ export default function DaysGrid(): JSX.Element {
         return;
       }
 
-      let nextDate = new Date(selectedDate);
+      const nextDate = new Date(selectedDate);
       nextDate.setDate(nextDate.getDate() + 1);
       const event = {
         id: crypto.randomUUID(),

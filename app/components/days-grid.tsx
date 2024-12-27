@@ -41,9 +41,10 @@ export default function DaysGrid(): JSX.Element {
     title: "",
     description: "",
   });
+  const [password, setPassword] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const gridRef = useRef<HTMLDivElement>(null);
-
   const startDate = new Date(2025, 0, 1);
   const now = new Date();
   const daysLeft = Math.max(
@@ -87,9 +88,17 @@ export default function DaysGrid(): JSX.Element {
 
   const handleAddEvent = async (): Promise<void> => {
     if (newEvent.title.trim() && selectedDate) {
+      if (password !== process.env.NEXT_PUBLIC_PASSWORD) {
+        setErrorMessage("Incorrect password. Please try again.");
+        setPassword("");
+        return;
+      }
+
+      let nextDate = new Date(selectedDate);
+      nextDate.setDate(nextDate.getDate() + 1);
       const event = {
         id: crypto.randomUUID(),
-        date: selectedDate.toISOString().split("T")[0],
+        date: nextDate.toISOString().split("T")[0],
         title: newEvent.title,
         description: newEvent.description,
       };
@@ -106,6 +115,9 @@ export default function DaysGrid(): JSX.Element {
         if (response.ok) {
           setEvents([...events, { ...event, date: new Date(event.date) }]);
           setNewEvent({ title: "", description: "" });
+          setPassword("");
+          setIsDialogOpen(false);
+          setErrorMessage(null);
           setIsDialogOpen(false);
         } else {
           console.error("Failed to add event");
@@ -333,6 +345,16 @@ export default function DaysGrid(): JSX.Element {
                   setNewEvent({ ...newEvent, description: e.target.value })
                 }
               />
+              <Input
+                type="password"
+                className="bg-black/50 border-zinc-800 text-white placeholder:text-white/40"
+                placeholder="Enter password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              {errorMessage && (
+                <div className="text-red-500 text-sm">{errorMessage}</div>
+              )}
               <Button
                 onClick={handleAddEvent}
                 className="bg-red-500/80 hover:bg-red-500 transition-colors"
